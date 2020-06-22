@@ -23,7 +23,7 @@ class Koyuki
 
     extension_path.each do |path|
       require path
-      file_name = path.split('/')[-1].delete('.rb')
+      file_name = File.basename(path, '.rb')
       class_name = snake_to_camel(file_name) + 'Extension'
 
       extension = eval(class_name).new(@bot)

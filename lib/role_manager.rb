@@ -19,6 +19,10 @@ class RoleManager
     )
   end
 
+  def emoji_id(emoji)
+    emoji.gsub(/<:[\w\W]+:|>/, '').to_i
+  end
+
   private
 
   def make_emoji_role_map
@@ -37,8 +41,6 @@ class RoleManager
       words.delete(':')
       icon = words[0]
       role = words[1].split('/')
-
-      icon = words[0].gsub(/[^\d]/, '').to_i if words[0][0..1] == '<:' # if emoji
 
       [icon, role] # [emoji, [role_name, role_id]]
     end.to_h

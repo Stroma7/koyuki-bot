@@ -8,6 +8,14 @@ require_relative '../lib/role_manager'
 RSpec.describe RoleManager do
   subject { RoleManager.new(template) }
 
+  describe '#emoji_id' do
+    let(:template) { '' }
+
+    it 'take out emoji id from string emoji' do
+      expect(subject.emoji_id('<:emoji7:111>')).to eq 111
+    end
+  end
+
   context 'normal template' do
     let(:template) do
       <<-MESSAGE
@@ -18,7 +26,7 @@ RSpec.describe RoleManager do
 
     describe '#emoji_role_map' do
       it 'make the map based on the template' do
-        expected = { 100000000000000000 => 100000000000000000, '👍' => 100000000000000001 }
+        expected = { '<:emoji:100000000000000000>' => 100000000000000000, '👍' => 100000000000000001 }
         result = subject.emoji_role_map
 
         expect(result).to eq expected
@@ -28,7 +36,7 @@ RSpec.describe RoleManager do
     describe '#embed' do
       it 'make embed' do
         map = <<~MAP
-          100000000000000000 : Role1
+          <:emoji:100000000000000000> : Role1
           👍 : Role2
         MAP
 

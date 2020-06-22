@@ -44,7 +44,10 @@ class RoleManagerExtension
     manager = @managers[message.id]
 
     manager.emoji_role_map.keys.each do |emoji|
-      emoji = message.channel.server.emoji[emoji] if emoji.is_a?(Integer)
+      if emoji.start_with?('<:')
+        emoji_id = manager.emoji_id(emoji)
+        emoji = message.channel.server.emoji[emoji_id]
+      end
 
       message.create_reaction(emoji)
     end
@@ -52,7 +55,12 @@ class RoleManagerExtension
 
   def find_role(event)
     manager = @managers[event.message.id]
-    emoji = event.emoji.id || event.emoji.name
+
+    emoji = if event.emoji.id.nil?
+              event.emoji.name
+            else
+              "<:#{event.emoji.to_reaction}>"
+            end
 
     role_id = manager.emoji_role_map[emoji]
     event.server.role(role_id)
